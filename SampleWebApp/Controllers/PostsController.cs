@@ -41,6 +41,7 @@ namespace SampleWebApp.Controllers
     /// This is an example of a Controller using GenericServices database commands with a DTO.
     /// In this case we are using normal, non-async commands
     /// </summary>
+    [Authorize]
     public class PostsController : Controller
     {
         /// <summary>

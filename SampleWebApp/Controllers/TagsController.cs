@@ -33,6 +33,7 @@ using ServiceLayer.TagServices;
 
 namespace SampleWebApp.Controllers
 {
+    [Authorize]
     public class TagsController : Controller
     {
         /// <summary>

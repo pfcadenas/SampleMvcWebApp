@@ -108,6 +108,11 @@
     <Compile Include="DataClasses\Concrete\Post.cs" />
     <Compile Include="DataClasses\Concrete\Tag.cs" />
     <Compile Include="DataClasses\EfConfiguration.cs" />
+    <Compile Include="Migrations\201906131534229_InitialCreate.cs" />
+    <Compile Include="Migrations\201906131534229_InitialCreate.Designer.cs">
+      <DependentUpon>201906131534229_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Startup\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -119,6 +124,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\201906131534229_InitialCreate.resx">
+      <DependentUpon>201906131534229_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Startup\Internal\BlogsContentSimple.xml" />
   </ItemGroup>
   <ItemGroup>

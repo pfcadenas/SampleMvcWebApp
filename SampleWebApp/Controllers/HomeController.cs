@@ -29,8 +29,9 @@ using SampleWebApp.Models;
 
 namespace SampleWebApp.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
-    {
+    {        
         public ActionResult Index()
         {
             return View();

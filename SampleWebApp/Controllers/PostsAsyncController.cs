@@ -38,6 +38,7 @@ using ServiceLayer.PostServices;
 
 namespace SampleWebApp.Controllers
 {
+    [Authorize]
     public class PostsAsyncController : Controller
     {
         /// <summary>
