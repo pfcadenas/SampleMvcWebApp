@@ -3,8 +3,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace SampleWebApp.Models
+namespace DataLayer.DataClasses.Concrete
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
@@ -23,6 +24,13 @@ namespace SampleWebApp.Models
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
+        }
+
+        public ICollection<Post> Post { get; set; }
+
+        public ApplicationUser()
+        {
+            Post = new HashSet<Post>();
         }
     }
 }

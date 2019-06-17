@@ -36,6 +36,7 @@ using GenericLibsBase.Core;
 using GenericServices;
 using GenericServices.Core;
 using ServiceLayer.UiClasses;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 [assembly: InternalsVisibleTo("Tests")]
 

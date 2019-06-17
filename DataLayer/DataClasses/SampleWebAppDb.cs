@@ -34,23 +34,29 @@ using System.Threading.Tasks;
 using DataLayer.DataClasses.Concrete;
 using DataLayer.DataClasses.Concrete.Helpers;
 using GenericServices;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 [assembly: InternalsVisibleTo("Tests")]
 
 namespace DataLayer.DataClasses
 {
 
-    public class SampleWebAppDb : DbContext, IGenericServicesDbContext
+    public class SampleWebAppDb : IdentityDbContext<ApplicationUser>, IGenericServicesDbContext
     {
+        public static SampleWebAppDb Create()
+        {
+            return new SampleWebAppDb();
+        }
+
         internal const string NameOfConnectionString = "SampleWebAppDb";
 
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
-        public SampleWebAppDb() : base("name=" + NameOfConnectionString) {}
+        public SampleWebAppDb() : base("name=" + NameOfConnectionString, throwIfV1Schema: false) {}
 
-        internal SampleWebAppDb(string connectionString) : base(connectionString) { }
+        internal SampleWebAppDb(string connectionString) : base(connectionString, throwIfV1Schema: false) { }
 
 
         /// <summary>

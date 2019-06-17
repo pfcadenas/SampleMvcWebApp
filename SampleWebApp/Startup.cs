@@ -1,6 +1,11 @@
 ﻿using Microsoft.Owin;
 using Owin;
 
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
+using SampleWebApp.Infrastructure;
+
 [assembly: OwinStartupAttribute(typeof(SampleWebApp.Startup))]
 namespace SampleWebApp
 {
@@ -8,7 +13,7 @@ namespace SampleWebApp
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+            ConfigureAuth(app);           
         }
     }
 }

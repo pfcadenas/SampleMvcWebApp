@@ -89,6 +89,12 @@
       <HintPath>..\packages\GenericServices.1.0.9\lib\GenericServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Reflection">
       <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>
     </Reference>
@@ -103,6 +109,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataClasses\ApplicationDbContext.cs" />
+    <Compile Include="DataClasses\Concrete\ApplicationUser.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -111,6 +119,10 @@
     <Compile Include="Migrations\201906131534229_InitialCreate.cs" />
     <Compile Include="Migrations\201906131534229_InitialCreate.Designer.cs">
       <DependentUpon>201906131534229_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906171913579_InitialCreate1.cs" />
+    <Compile Include="Migrations\201906171913579_InitialCreate1.Designer.cs">
+      <DependentUpon>201906171913579_InitialCreate1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Startup\DataLayerInitialise.cs" />
@@ -127,10 +139,16 @@
     <EmbeddedResource Include="Migrations\201906131534229_InitialCreate.resx">
       <DependentUpon>201906131534229_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906171913579_InitialCreate1.resx">
+      <DependentUpon>201906171913579_InitialCreate1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Startup\Internal\BlogsContentSimple.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Startup\Internal\BlogsContextMedium.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

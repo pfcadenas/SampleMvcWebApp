@@ -1,7 +1,8 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using DataLayer.DataClasses.Concrete;
 
-namespace SampleWebApp.Models
+namespace DataLayer.DataClasses
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {     

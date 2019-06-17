@@ -48,6 +48,12 @@ namespace DataLayer.DataClasses.Concrete
 
         public ICollection<Tag> Tags { get; set; }
 
+        public ICollection<ApplicationUser> Like { get; set; }
+
+        public Post() {
+            Like = new HashSet<ApplicationUser>();
+        }
+
         public override string ToString()
         {
             return string.Format("PostId: {0}, Title: {1}, BlogId: {2}, Blogger: {3}, AllocatedTags: {4}", 

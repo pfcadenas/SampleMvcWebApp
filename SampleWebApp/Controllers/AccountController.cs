@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using SampleWebApp.Models;
+using DataLayer.DataClasses.Concrete;
 
 namespace SampleWebApp.Controllers
 {
