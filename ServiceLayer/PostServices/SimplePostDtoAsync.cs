@@ -52,9 +52,6 @@ namespace ServiceLayer.PostServices
         public ICollection<Tag> Tags { get; set; }
 
         [ScaffoldColumn(false)]
-        public ICollection<ApplicationUser> Like { get; set; }
-
-        [ScaffoldColumn(false)]
         public DateTime LastUpdated { get; set; }
 
         /// <summary>
@@ -63,23 +60,6 @@ namespace ServiceLayer.PostServices
         public DateTime LastUpdatedUtc { get { return DateTime.SpecifyKind(LastUpdated, DateTimeKind.Utc); } }
 
         public string TagNames { get { return string.Join(", ", Tags.Select(x => x.Name)); } }
-
-        [Display(Name = "Like")]
-        public string LikeCount { get { return Like.Count.ToString(); } }
-        
-        public ICollection<string> LikeName
-        {
-            get
-            {
-                ICollection<string> answer = new List<string>();
-
-                foreach (ApplicationUser user in Like)
-                {
-                    answer.Add(user.UserName);
-                }
-                return answer;
-            }
-        }
 
         //----------------------------------------------
         //overridden properties or methods
