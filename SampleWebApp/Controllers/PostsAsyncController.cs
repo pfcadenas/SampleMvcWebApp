@@ -37,30 +37,32 @@ using SampleWebApp.Infrastructure;
 using ServiceLayer.PostServices;
 
 namespace SampleWebApp.Controllers
-{
-    [Authorize]
+{    
     public class PostsAsyncController : Controller
     {
         /// <summary>
         /// This is an example of a Controller using GenericServices database commands with a DTO.
         /// In this case we are using async commands
         /// </summary>
+        [AllowAnonymous]
         public async Task<ActionResult> Index(IListService service)
         {
             return View(await service.GetAll<SimplePostDtoAsync>().ToListAsync());
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Details(int id, IDetailServiceAsync service)
         {
             return View((await service.GetDetailAsync<DetailPostDtoAsync>(id)).Result);
         }
 
-
+        [Authorize]
         public async Task<ActionResult> Edit(int id, IUpdateSetupServiceAsync service)
         {
             return View((await service.GetOriginalAsync<DetailPostDtoAsync>(id)).Result);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(DetailPostDtoAsync dto, IUpdateServiceAsync service)
@@ -81,12 +83,14 @@ namespace SampleWebApp.Controllers
             return View(dto);
         }
 
+        [Authorize]
         public async Task<ActionResult> Create(ICreateSetupServiceAsync setupService)
         {
             var dto = await setupService.GetDtoAsync<DetailPostDtoAsync>();
             return View(dto);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(DetailPostDtoAsync dto, ICreateServiceAsync service)
@@ -107,6 +111,7 @@ namespace SampleWebApp.Controllers
             return View(dto);
         }
 
+        [Authorize]
         public async Task<ActionResult> Delete(int id, IDeleteServiceAsync service)
         {
 
@@ -123,11 +128,13 @@ namespace SampleWebApp.Controllers
         //-----------------------------------------------------
         //Code used in https://www.simple-talk.com/dotnet/.net-framework/the-.net-4.5-asyncawait-commands-in-promise-and-practice/
 
+        [AllowAnonymous]
         public async Task<ActionResult> NumPosts(SampleWebAppDb db)
         {
             return View((object)await GetNumPostsAsync(db));
         }
 
+        [AllowAnonymous]
         private static async Task<string> GetNumPostsAsync(SampleWebAppDb db)
         {
             var numPosts = await db.Posts.CountAsync();
@@ -136,17 +143,20 @@ namespace SampleWebApp.Controllers
 
         //--------------------------------------------
 
+        [AllowAnonymous]
         public ActionResult CodeView()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> Delay()
         {
             await Task.Delay(500);
             return View(500);
         }
 
+        [AllowAnonymous]
         public ActionResult Reset(SampleWebAppDb db)
         {
             DataLayerInitialise.ResetBlogs(db, TestDataSelection.Medium);

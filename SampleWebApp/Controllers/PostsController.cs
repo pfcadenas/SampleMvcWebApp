@@ -40,8 +40,7 @@ namespace SampleWebApp.Controllers
     /// <summary>
     /// This is an example of a Controller using GenericServices database commands with a DTO.
     /// In this case we are using normal, non-async commands
-    /// </summary>
-    [Authorize]
+    /// </summary>    
     public class PostsController : Controller
     {
         /// <summary>
@@ -50,6 +49,7 @@ namespace SampleWebApp.Controllers
         /// <param name="id"></param>
         /// <param name="service"></param>
         /// <returns></returns>
+        [AllowAnonymous]
         public ActionResult Index(int? id, IListService service)
         {
             var filtered = id != null && id != 0;
@@ -60,16 +60,19 @@ namespace SampleWebApp.Controllers
             return View(query.ToList());
         }
 
+        [AllowAnonymous]
         public ActionResult Details(int id, IDetailService service)
         {
             return View(service.GetDetail<DetailPostDto>(id).Result);
         }
 
+        [Authorize]
         public ActionResult Edit(int id, IUpdateSetupService service)
         {
             return View(service.GetOriginal<DetailPostDto>(id).Result);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(DetailPostDto dto, IUpdateService service)
@@ -90,12 +93,14 @@ namespace SampleWebApp.Controllers
             return View(dto);
         }
 
+        [Authorize]
         public ActionResult Create(ICreateSetupService setupService)
         {
             var dto = setupService.GetDto<DetailPostDto>();
             return View(dto);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(DetailPostDto dto, ICreateService service)
@@ -116,6 +121,7 @@ namespace SampleWebApp.Controllers
             return View(dto);
         }
 
+        [Authorize]
         public ActionResult Delete(int id, IDeleteService service)
         {
 
@@ -132,12 +138,14 @@ namespace SampleWebApp.Controllers
         //-----------------------------------------------------
         //Code used in https://www.simple-talk.com/dotnet/.net-framework/the-.net-4.5-asyncawait-commands-in-promise-and-practice/
 
+        [AllowAnonymous]
         public ActionResult NumPosts(SampleWebAppDb db)
         {
             //The cast to object is to stop the View using the string as a view name
             return View((object)GetNumPosts(db));
         }
 
+        [AllowAnonymous]
         public static string GetNumPosts(SampleWebAppDb db)
         {
             var numPosts = db.Posts.Count();
@@ -145,18 +153,20 @@ namespace SampleWebApp.Controllers
         }
 
         //--------------------------------------------
-
+        [AllowAnonymous]
         public ActionResult CodeView()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult Delay()
         {
             Thread.Sleep(500);
             return View(500);
         }
 
+        [AllowAnonymous]
         public ActionResult Reset(SampleWebAppDb db)
         {
             DataLayerInitialise.ResetBlogs(db, TestDataSelection.Medium);
