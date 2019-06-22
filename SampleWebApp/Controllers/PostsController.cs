@@ -33,6 +33,7 @@ using DataLayer.Startup;
 using GenericServices;
 using SampleWebApp.Infrastructure;
 using ServiceLayer.PostServices;
+using ServiceLayer.TagServices;
 
 
 namespace SampleWebApp.Controllers
@@ -50,11 +51,19 @@ namespace SampleWebApp.Controllers
         /// <param name="service"></param>
         /// <returns></returns>
         [AllowAnonymous]
-        public ActionResult Index(int? id, IListService service)
+        public ActionResult Index(int? id, string content, int? blog, IListService service)
         {
-            var filtered = id != null && id != 0;
-            var query = filtered ? service.GetAll<SimplePostDto>().Where(x => x.BlogId == id) : service.GetAll<SimplePostDto>();
-            if (filtered)
+            var query = service.GetAll<SimplePostDto>();
+
+            //filter by Content 
+            if (content != null && content != "")
+                query =  query.Where(x => x.Title.Contains(content));
+
+            //filter by blog
+            if (blog != null && blog != 0)
+                query =  query.Where(x => x.BlogId == blog);            
+
+            if ((blog != null && blog != 0)|| (content != null && content != ""))
                 TempData["message"] = "Filtered list";
 
             return View(query.ToList());
