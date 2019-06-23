@@ -57,7 +57,7 @@ namespace SampleWebApp.Controllers
 
             //filter by Content 
             if (content != null && content != "")
-                query =  query.Where(x => x.Title.Contains(content));
+                query =  query.Where(x => x.Content.Contains(content));
 
             //filter by blog
             if (blog != null && blog != 0)

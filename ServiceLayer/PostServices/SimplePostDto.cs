@@ -52,6 +52,9 @@ namespace ServiceLayer.PostServices
         [MinLength(2), MaxLength(128)]
         public string Title { get; set; }
 
+        [Required]
+        public string Content { get; set; }
+
         [ScaffoldColumn(false)]
         public ICollection<Tag> Tags { get;  set; }
 
