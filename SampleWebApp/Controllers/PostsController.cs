@@ -34,7 +34,8 @@ using GenericServices;
 using SampleWebApp.Infrastructure;
 using ServiceLayer.PostServices;
 using ServiceLayer.TagServices;
-
+using SampleWebApp.Models;
+using System.Collections.Generic;
 
 namespace SampleWebApp.Controllers
 {
@@ -181,6 +182,74 @@ namespace SampleWebApp.Controllers
             DataLayerInitialise.ResetBlogs(db, TestDataSelection.Medium);
             TempData["message"] = "Successfully reset the blogs data";
             return RedirectToAction("Index");
+        }        
+
+        [AllowAnonymous]
+        public ActionResult TopWords(SampleWebAppDb db)
+        {
+            string query = "";
+            IEnumerable<Post> posts = db.Posts.ToList();
+            
+            //Build the query to obtain the 5 words most used on all post 
+            query = @"SELECT 
+
+                        u.word,
+                        sum(u.weigth ) AS weigth
+
+                        FROM 
+                        (";
+
+            string queryFrom = "";
+            foreach (var post in posts)
+            {
+                queryFrom += " UNION SELECT * FROM dbo.FindWordByPost(" + post.PostId +")";
+            }
+
+            query += queryFrom.Substring(6) + @" )
+
+                        as u
+
+                        GROUP BY u.word
+                        ORDER BY sum(u.weigth) DESC";
+
+
+            var result = db.Database.SqlQuery<TopWordsViewModels>(query).Take(5).ToList();
+
+            return View(result);
+        }
+
+        [AllowAnonymous]
+        public ActionResult TagCloud(SampleWebAppDb db)
+        {
+            string query = "";
+            IEnumerable<Post> posts = db.Posts.ToList();
+
+            //Build the query to obtain the 20 words most used on all post to create a tag cloud 
+            query = @"SELECT 
+
+                        u.word,
+                        sum(u.weigth ) AS weigth
+
+                        FROM 
+                        (";
+
+            string queryFrom = "";
+            foreach (var post in posts)
+            {
+                queryFrom += " UNION SELECT * FROM dbo.FindWordByPost(" + post.PostId + ")";
+            }
+
+            query += queryFrom.Substring(6) + @" )
+
+                        as u
+
+                        GROUP BY u.word
+                        ORDER BY sum(u.weigth) DESC";
+
+
+            var result = db.Database.SqlQuery<TopWordsViewModels>(query).Take(20).ToList();
+
+            return View(result);
         }
     }
 }

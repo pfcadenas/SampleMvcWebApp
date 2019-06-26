@@ -78,3 +78,23 @@ textarea {
     color: #333;
     z-index: 999999;
 }
+
+/* Rigth panel to place Top Five Words and Tag Cloud  */
+.rigth-panel {
+    border-width: 1px;
+    border-style: none none none solid;
+    border-color: #EEE -moz-use-text-color;
+    margin: 20px 0 20px 0 ;
+    height: 100%;
+}
+
+/* Diferent style for words in tag cloud*/
+.tag1{font-size: 0.8 em}
+.tag2{font-size: 0.9em}
+.tag3{font-size: 1em}
+.tag4{font-size: 1.1em}
+.tag5{font-size: 1.2em}
+.tag6{font-size: 1.3em}
+.tag7{font-size: 1.4em}
+
+

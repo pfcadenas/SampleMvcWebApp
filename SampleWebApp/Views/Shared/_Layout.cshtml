@@ -46,9 +46,15 @@
         </div>
     </div>
     <div class="container body-content">
-        @RenderBody()
+        <div class="row">
+            <div class="col-md-10">@RenderBody()</div>
+            <div class="rigth-panel col-md-2">
+                <div id="topFiveWords" class="col-md-12"></div>
+                <div id="tagCloud" class="col-md-12"></div>
+            </div>        
+        </div>        
         <hr />
-        <footer class="small  text-muted">
+        <footer class="small  text-muted col-md-12">
             <span>An open source project under the <a href="http://opensource.org/licenses/MIT" target="_blank">MIT licence</a>, created by <a href="http://www.thereformedprogrammer.net/about-me/" target="_blank">Jon Smith</a>.</span>
             <span class="pull-right">Hosted on @WebUiInitialise.HostType</span>
         </footer>
@@ -56,5 +62,28 @@
 
     @Scripts.Render("~/bundles/javascript")
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+
+            //function to load de content of div#topFiveWords
+            $.ajax({
+                url: "/Posts/TopWords",
+                method: "GET",
+                success: function (response) {
+                    $('#topFiveWords').html(response);
+                }
+            });
+
+            //function to load de content of div@tagCloud
+            $.ajax({
+                url: "/Posts/TagCloud",
+                method: "GET",
+                success: function (response) {
+                    $('#tagCloud').html(response);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

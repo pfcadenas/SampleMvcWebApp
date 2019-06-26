@@ -124,6 +124,10 @@
     <Compile Include="Migrations\201906171913579_InitialCreate1.Designer.cs">
       <DependentUpon>201906171913579_InitialCreate1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906260555403_InitialCreate2.cs" />
+    <Compile Include="Migrations\201906260555403_InitialCreate2.Designer.cs">
+      <DependentUpon>201906260555403_InitialCreate2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Startup\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
@@ -141,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906171913579_InitialCreate1.resx">
       <DependentUpon>201906171913579_InitialCreate1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906260555403_InitialCreate2.resx">
+      <DependentUpon>201906260555403_InitialCreate2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Startup\Internal\BlogsContentSimple.xml" />
   </ItemGroup>
