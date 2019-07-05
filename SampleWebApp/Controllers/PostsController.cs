@@ -56,6 +56,9 @@ namespace SampleWebApp.Controllers
             //Return filter content to allow tag cloud link to Post page and filtering by content
             ViewData["content"] = content;
 
+            //Return filter content to allow Blog page link to Post page and filtering by blogger
+            ViewData["blog"] = blog;
+
             return View();
         }
 

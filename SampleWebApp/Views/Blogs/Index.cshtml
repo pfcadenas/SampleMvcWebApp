@@ -24,42 +24,74 @@
     @*<span class="pull-right"><strong>@Html.ActionLink("Explanation of the code", "CodeView")</strong></span>*@
 </div>
 
-<table class="table">
-    <tr>
-        <th>
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailAddress)
-        </th>
-        <th>
-            Num Posts this Author
-        </th>
-        <th></th>
-    </tr>
+<br>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.HiddenFor(modelItem => item.BlogId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailAddress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PostsCount)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.BlogId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.BlogId }) |
-            @Html.ActionLink("List Posts", "Index", "Posts", new { id = item.BlogId }, null)
-        </td>
-    </tr>
-}
-
+<table id="tableBlogs" class="table">
+    <thead>
+        <tr>            
+            <th>
+                Name
+            </th>
+            <th>
+                EmailAddress
+            </th>
+            <th>
+                Num Posts this Author
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
 </table>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            //Configuring datatable plugin
+            $("#tableBlogs").DataTable({
+                "bFilter": false,
+                "bProcessing": true,
+                "bServerSide": true,
+                "ajax": {
+                    url: "/api/blogs",
+                    method: 'GET',
+                    dataSrc: "aaData"
+                },
+                columns: [
+                    {
+                        data: "Name",
+                        width: "30%",
+                        className: 'text-left',
+                    },
+                    {
+                        data: "EmailAddress",
+                        width: "30%",
+                        className: 'text-left'
+                    },
+                    {
+                        data: "NumPosts",
+                        width: "30%",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "BlogId",
+                        width: "10%",
+                        className: "text-right",
+                        render: function (data, type, post) {
+
+                            if ("@Request.IsAuthenticated" == "True") {
+                                return "<span><a href='/Blogs/Edit/" + data + "'><i class='glyphicon glyphicon-pencil'></i></a> <a href='/Blogs/Delete/" + data + "'><i class='glyphicon glyphicon-trash'></i></a></span> <a href='/Posts/Index?blog= " + data + "'><i class='glyphicon glyphicon-list'></i></a>";
+                            }
+                            else {
+                                return "<a href='/Blogs/Details/" + data + "'>Details</a>";
+                            }
+
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}

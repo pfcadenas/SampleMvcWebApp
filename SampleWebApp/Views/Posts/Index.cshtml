@@ -97,6 +97,7 @@
                 "bFilter": false,
                 "bProcessing": true,
                 "bServerSide": true,
+                "deferLoading": 0, 
                 "ajax": {
                     url: "/api/post",
                     method: 'GET',
@@ -171,7 +172,8 @@
                     for (var i = 0; i < blogs.length; i++) {
                         $('#blogsSelect').append('<option value="' + blogs[i].BlogId + '">' + blogs[i].Name + '</option>');
                     };
-
+                    $('#blogsSelect').val(@ViewData["blog"]);
+                    $("#tablePosts").DataTable().ajax.reload(); //load datatable data after load all Blog filters 
                 }
             });
 

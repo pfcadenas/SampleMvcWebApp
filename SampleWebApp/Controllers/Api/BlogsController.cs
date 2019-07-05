@@ -38,5 +38,37 @@ namespace SampleWebApp.Controllers.Api
 
             return Ok(blogsDtos);
         }
+
+        public IHttpActionResult GetTags([FromUri] int? draw, [FromUri] int? start, [FromUri] int? length)
+        {
+            IQueryable<Blog> query = db.Blogs.Include("Posts");
+
+            int recordsTotal = 0;
+            //Partitioning from [start] take [length] objects
+            if (start != null && length != null)
+            {
+                recordsTotal = query.Count(); //total objects
+                query = query.OrderBy(x => x.Name).Skip((int)start).Take((int)length);
+            }
+
+            var tagsDtos = query
+                .ToList()
+                .Select(x => new {
+                    BlogId = x.BlogId,
+                    Name = x.Name,
+                    EmailAddress = x.EmailAddress,
+                    NumPosts = x.Posts.Count
+                });
+
+            var list = new TablePartitioningResponseViewModels
+            {
+                draw = (int)draw,
+                recordsTotal = recordsTotal,
+                recordsFiltered = recordsTotal,
+                aaData = tagsDtos
+            };
+
+            return Ok(list);
+        }
     }
 }
