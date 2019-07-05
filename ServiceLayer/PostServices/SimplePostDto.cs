@@ -30,7 +30,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DataLayer.DataClasses.Concrete;
-using GenericServices;
 using GenericServices.Core;
 
 [assembly: InternalsVisibleTo("Tests")]

@@ -1,5 +1,4 @@
-﻿@model IEnumerable<ServiceLayer.PostServices.SimplePostDto>
-
+﻿
 @{
     ViewBag.Title = "Posts";
 }
@@ -21,124 +20,176 @@
     (See @Html.ActionLink("Posts Async", "Index", "PostsAsync") for async versions of the same commands).
 </p>
 <p>
-    Below you will see a table of posts which can be manipulated. We have chosen a POST as an example as it has the following attributes: 
+    Below you will see a table of posts which can be manipulated. We have chosen a POST as an example as it has the following attributes:
 </p>
 <ul>
     <li>When we list them we want 'shape' what the user sees, i.e. we leave out the post content but include the blogger Name and Tags.</li>
     <li>The create and edit commands are non-trivial because Posts links to other tables, like author and the tags.</li>
-</ul> 
-<hr/>
+</ul>
+<hr />
 
 <div>
-    <span> @if (Request.IsAuthenticated) { @Html.ActionLink("Create New Post", "Create") <span>|</span> @Html.ActionLink("Tags Page", "Index", "Tags")    <span>|</span> @Html.ActionLink("Blogs Page", "Index", "Blogs")    <span>|</span> @Html.ActionLink("Reset Blogs data", "Reset") }</span>
+    <span>
+        @if (Request.IsAuthenticated)
+        { @Html.ActionLink("Create New Post", "Create") <span>|</span> @Html.ActionLink("Tags Page", "Index", "Tags")    <span>|</span> @Html.ActionLink("Blogs Page", "Index", "Blogs")    <span>|</span> @Html.ActionLink("Reset Blogs data", "Reset") }
+    </span>
     <span class="pull-right"><strong>@Html.ActionLink("Explanation of the code", "CodeView")</strong></span>
 </div>
 
-<form action="index" method="get" style="margin:10px">
+<br>
+
+<div style="margin:10px">
     <div class="form-inline pull-right">
         <div class="form-group">
             <div class="col-md-12">
                 <label class="control-label">Content</label>
-                <input id="content" name="content" type="text" value="" class="form-control">
+                <input id="content" name="content" type="text" value="@ViewData["content"]" class="form-control">
             </div>
-        </div>        
+        </div>
         <div class="form-group">
             <div class="col-md-12">
                 <label class="control-label">Blog</label>
                 <select id="blogsSelect" name="blog" type="text" value="" class="form-control">
-                    <option value="0" >--Seleccione--</option>
+                    <option value="0">--Seleccione--</option>
                 </select>
             </div>
         </div>
-        <button class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+        <button id="btnSearch" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
     </div>
-</form>
+</div>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.BloggerName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th style="text-align:center">
-            @Html.DisplayNameFor(model => model.LikeCount)
-        </th>
-        <th>
-            Last updated
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.TagNames)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model) {
+<table id="tablePosts" class="table">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.BloggerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td style="text-align:center">
-                @if (Request.IsAuthenticated && !item.LikeName.Contains(User.Identity.Name))
-                { <i data-post-id="@item.PostId"  data-post-like="@item.LikeCount" id="userLike" class="glyphicon glyphicon-thumbs-up" style="color:#48b719;cursor:pointer"></i> }
-                @Html.DisplayFor(modelItem => item.LikeCount)                
-            </td>
-            <td>
-                @item.LastUpdatedUtc.ToShortDateString()
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TagNames)
-            </td>
-            <td>
-                @if (Request.IsAuthenticated) { @Html.ActionLink("Edit", "Edit", new { id = item.PostId }) <span>|</span> }
-                @Html.ActionLink("Details", "Details", new { id=item.PostId }) 
-                @if (Request.IsAuthenticated) { <span>|</span> @Html.ActionLink("Delete", "Delete", new { id = item.PostId }) }
-            </td>
+            <th>
+                Blogger Name
+            </th>
+            <th>
+                Title
+            </th>
+            <th style="text-align:center">
+                Like
+            </th>
+            <th>
+                Last Updated
+            </th>
+            <th>
+                Tag Names
+            </th>
+            <th></th>
         </tr>
-    }
-
+    </thead>
+    <tbody></tbody>
 </table>
 
 <span>
     @Html.ActionLink("Delay for 500ms (Sync)", "Delay")
-     Useful for checking capacity of web server
+    Useful for checking capacity of web server
 </span>
 
 @section scripts
     {
-        <script>
-            $(document).ready(function(){
-                $("#userLike, #userDoNotLike").on("click", function () {
-                    var button = $(this);
-                    $.ajax({
-                        url: "/api/post/like/",
-                        method: "POST",
-                        data: {
-                            PostID: button.attr("data-post-id")
-                        },
-                        success: function (response) {
-                            button.parents("td").html(parseInt(button.attr("data-post-like")) + 1);
-                        }
-                    });
-                });               
+    <script>
+        $(document).ready(function () {
 
-                //function for load filter Blog
-                $.ajax({
-                    url: '/api/blogs',
+            //Configuring datatable plugin
+            $("#tablePosts").DataTable({
+                "bFilter": false,
+                "bProcessing": true,
+                "bServerSide": true,
+                "ajax": {
+                    url: "/api/post",
                     method: 'GET',
-                    success: function (blogs) {
-                        for (var i = 0; i< blogs.length; i++) {
-                            $('#blogsSelect').append('<option value="' + blogs[i].BlogId + '">' + blogs[i].Name + '</option>');
-                        };
-                        
+                    dataSrc: "aaData",
+                    data: {
+                        content: function () { return $('#content').val() },
+                        blog: function () { return $('#blogsSelect').val() }
                     }
-                });                
+                },
+                columns: [
+                    {
+                        data: "BloggerName",
+                        width: "15%",
+                        className: "text-center",
+                        render: function (data, type, row, meta) {
+                            return type === 'display' && data.length > 100 ?
+                              '<span title="'+data+'">'+data.substr( 0, 98 )+'...</span>' :
+                              data;
+                        }
+                    },
+                    {
+                        data: "Title",
+                        className: "text-center"
+                    },
+                    {
+                        data: "LikeCount",
+                        className: "text-center",
+                        render: function (data, type, row, meta) {
+                            if (row.CanMakeLike && "@Request.IsAuthenticated" == "True") {
+                                return "<i data-post-id='" + row.PostId + "' data-post-like='" + row.LikeCount + "' id='userLike' class='glyphicon glyphicon-thumbs-up' onclick='MakeLike(" + row.PostId + ")' style='color:#48b719;cursor:pointer'></i> " + data;
+                            }
+                            else {
+                                return data;
+                            }
+                        }
+                    },
+                    {
+                        data: "LastUpdated",
+                        width: "13%",
+                    },
+                    {
+                        data: "TagNames",
+                        className: "text-center",
+                    },
+                    {
+                        data: "PostId",
+                        className: 'text-right',
+                        width: "10%",
+                        render: function (data, type, post) {
 
+                            if ("@Request.IsAuthenticated" == "True") {
+                                return "<span><a href='/Posts/Edit/" + data + "'><i class='glyphicon glyphicon-pencil'></i></a> <a href='/Posts/Details/" + data + "'><i class='glyphicon glyphicon-eye-open'></i></a> <a href='/Posts/Delete/" + data + "'><i class='glyphicon glyphicon-trash'></i></a></span>";
+                            }
+                            else {
+                                return "<a href='/Posts/Details/" + data + "'>Details</a>";
+                            }
+
+                        }
+                    }
+                ]
             });
-        </script>
-    }
+
+            $("#btnSearch").on('click', function () {
+                $("#tablePosts").DataTable().ajax.reload();
+            });
+
+            //function for load filter Blog
+            $.ajax({
+                url: '/api/blogs',
+                method: 'GET',
+                success: function (blogs) {
+                    for (var i = 0; i < blogs.length; i++) {
+                        $('#blogsSelect').append('<option value="' + blogs[i].BlogId + '">' + blogs[i].Name + '</option>');
+                    };
+
+                }
+            });
+
+        });
+
+        //function to make like to a post
+        function MakeLike(PostID) {
+            $.ajax({
+                url: "/api/post/like/",
+                method: "POST",
+                data: {
+                    PostID: PostID
+                },
+                success: function (response) {
+                    $("#tablePosts").DataTable().ajax.reload();
+                }
+            });
+        }
+    </script>
+}
 

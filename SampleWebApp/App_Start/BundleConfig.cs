@@ -38,12 +38,17 @@ namespace SampleWebApp
             bundles.Add(new ScriptBundle("~/bundles/javascript").Include(
                         "~/Scripts/jquery-{version}.js",
                         "~/Scripts/bootstrap.js",
-                        "~/Scripts/respond.js"));
+                        "~/Scripts/respond.js",
+                        "~/Scripts/DataTables/jquery.dataTables.js",
+                        "~/Scripts/DataTables/dataTables.bootstrap.js"
+                        ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       //"~/Content/notify.css", - not used any more
-                      "~/Content/site.css"));
+                      "~/Content/site.css",
+                      "~/Content/DataTables/dataTables.bootstrap.css"
+                      ));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));

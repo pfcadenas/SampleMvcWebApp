@@ -33,7 +33,6 @@ using DataLayer.Startup;
 using GenericServices;
 using SampleWebApp.Infrastructure;
 using ServiceLayer.PostServices;
-using ServiceLayer.TagServices;
 using SampleWebApp.Models;
 using System.Collections.Generic;
 
@@ -54,20 +53,10 @@ namespace SampleWebApp.Controllers
         [AllowAnonymous]
         public ActionResult Index(int? id, string content, int? blog, IListService service)
         {
-            var query = service.GetAll<SimplePostDto>();
+            //Return filter content to allow tag cloud link to Post page and filtering by content
+            ViewData["content"] = content;
 
-            //filter by Content 
-            if (content != null && content != "")
-                query =  query.Where(x => x.Content.Contains(content));
-
-            //filter by blog
-            if (blog != null && blog != 0)
-                query =  query.Where(x => x.BlogId == blog);            
-
-            if ((blog != null && blog != 0)|| (content != null && content != ""))
-                TempData["message"] = "Filtered list";
-
-            return View(query.ToList());
+            return View();
         }
 
         [AllowAnonymous]

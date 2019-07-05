@@ -54,7 +54,9 @@ namespace DataLayer.DataClasses
         public DbSet<Post> Posts { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
-        public SampleWebAppDb() : base("name=" + NameOfConnectionString, throwIfV1Schema: false) {}
+        public SampleWebAppDb() : base("name=" + NameOfConnectionString, throwIfV1Schema: false) {
+            this.Configuration.LazyLoadingEnabled = false;
+        }
 
         internal SampleWebAppDb(string connectionString) : base(connectionString, throwIfV1Schema: false) { }
 

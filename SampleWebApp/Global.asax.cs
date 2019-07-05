@@ -29,6 +29,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Http;
 using SampleWebApp.Infrastructure;
+using AutoMapper;
 
 namespace SampleWebApp
 {
@@ -36,6 +37,7 @@ namespace SampleWebApp
     {
         protected void Application_Start()
         {
+            Mapper.Initialize(c => c.AddProfile<MappingProfile>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
