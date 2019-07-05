@@ -21,22 +21,38 @@ namespace SampleWebApp.Controllers.Api
 
         public TagsController() {
             db = new SampleWebAppDb();
-        }
-     
-        //GET /api/tags
-        public IHttpActionResult GetTags(string query = null)
+        }     
+      
+        public IHttpActionResult GetTags([FromUri] int? draw, [FromUri] int? start, [FromUri] int? length)
         {
-            var tagsDtos = new List<Tag>();
+            IQueryable<Tag> query = db.Tags.Include("Posts");           
 
-            if (!String.IsNullOrWhiteSpace(query))
-                tagsDtos = db.Tags
-                   .Where(c => c.Name.Contains(query))                   
-                   .ToList();
-            else
-                tagsDtos = db.Tags
-                    .ToList();
+            int recordsTotal = 0;
+            //Partitioning from [start] take [length] objects
+            if (start != null && length != null)
+            {
+                recordsTotal = query.Count(); //total objects
+                query = query.OrderBy(x => x.Name).Skip((int)start).Take((int)length);
+            }
 
-            return Ok(tagsDtos);
+            var tagsDtos = query
+                .ToList()
+                .Select(x => new {
+                    TagId = x.TagId,
+                    Name = x.Name,
+                    Slug = x.Slug,
+                    NumPosts = x.Posts.Count
+                });
+
+            var list = new TablePartitioningResponseViewModels
+            {
+                draw = (int)draw,
+                recordsTotal = recordsTotal,
+                recordsFiltered = recordsTotal,
+                aaData = tagsDtos
+            };
+
+            return Ok(list);
         }
     }
 }

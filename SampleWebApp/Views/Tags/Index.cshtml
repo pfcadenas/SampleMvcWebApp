@@ -1,5 +1,4 @@
-﻿@model IEnumerable<ServiceLayer.TagServices.TagListDto>
-
+﻿
 @{
     ViewBag.Title = "Tags";
 }
@@ -33,37 +32,78 @@
     <span>@Html.ActionLink("Create New Tag", "Create") | @Html.ActionLink("Posts Page", "Index", "Posts") | @Html.ActionLink("Blogs Page", "Index", "Blogs")</span>
     <span class="pull-right"><strong>@Html.ActionLink("Explanation of the code", "CodeView")</strong></span>
 </div>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Slug)
-        </th>
-        <th>
-            Num Posts Used In
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Slug)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PostsCount)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TagId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TagId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TagId })
-        </td>
-    </tr>
+<br>
+
+<table id="tableTags" class="table">
+    <thead>
+        <tr>
+            <th>
+               Name
+            </th>
+            <th>
+                Slug
+            </th>
+            <th>
+                Num Posts Used In
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+    {
+    <script>
+        $(document).ready(function () {
+
+            //Configuring datatable plugin
+            $("#tableTags").DataTable({
+                "bFilter": false,
+                "bProcessing": true,
+                "bServerSide": true,
+                "ajax": {
+                    url: "/api/tags",
+                    method: 'GET',
+                    dataSrc: "aaData"
+                },
+                columns: [
+                    {
+                        data: "Name",
+                        width: "30%",
+                        className: 'text-left',
+                    },
+                    {
+                        data: "Slug",
+                        width: "30%",
+                        className: 'text-left'                        
+                    },                    
+                    {
+                        data: "NumPosts",
+                        width: "30%",
+                        className: 'text-center'
+                    },
+                    {
+                        data: "TagId",
+                        width: "10%",
+                        className: "text-right",
+                        render: function (data, type, post) {
+
+                            if ("@Request.IsAuthenticated" == "True") {
+                                return "<span><a href='/Tags/Edit/" + data + "'><i class='glyphicon glyphicon-pencil'></i></a> <a href='/Tags/Details/" + data + "'><i class='glyphicon glyphicon-eye-open'></i></a> <a href='/Tags/Delete/" + data + "'><i class='glyphicon glyphicon-trash'></i></a></span>";
+                            }
+                            else {
+                                return "<a href='/Tags/Details/" + data + "'>Details</a>";
+                            }
+
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
 }
 
-</table>
+
+

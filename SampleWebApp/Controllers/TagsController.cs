@@ -42,7 +42,7 @@ namespace SampleWebApp.Controllers
         /// </summary>
         public ActionResult Index(IListService service)
         {
-            return View(service.GetAll<TagListDto>().ToList());
+            return View();
         }
 
         public ActionResult Details(int id, IDetailService service)
