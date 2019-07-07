@@ -26,16 +26,65 @@
 #endregion
 using System.Web.Mvc;
 using SampleWebApp.Models;
+using DataLayer.DataClasses;
+using DataLayer.DataClasses.Concrete;
+using System.Linq;
+using GenericServices;
+using ServiceLayer.PostServices;
 
 namespace SampleWebApp.Controllers
 {
     [AllowAnonymous]
     public class HomeController : Controller
-    {        
-        public ActionResult Index()
+    {
+        private SampleWebAppDb db;
+        public HomeController()
         {
-            return View();
+            db = new SampleWebAppDb();
         }
+
+        public ActionResult Index(int? id, [System.Web.Http.FromUri] string content)
+        {
+            IQueryable<Post> query = db.Posts.Include("Like").Include("Blogger").Include("Tags");
+
+            //filter by Content 
+            if (content != null && content != "")
+                query = query.Where(x => x.Content.Contains(content));
+
+            int recordsTotal = 0;
+            //Partitioning from [start] take [length] objects
+            int start = id == null || id < 1 ? 0 : ((int)id - 1) * 10;
+            int length = 10;
+            recordsTotal = query.Count(); //total object 
+            query = query.OrderByDescending(x => x.LastUpdated).Skip(start).Take(length);
+
+            ApplicationUser user = db.Users.SingleOrDefault(c => c.UserName == User.Identity.Name);
+
+            var listPost = query
+                .ToList()
+                .Select(x => new PostViewModel
+                {
+                    PostId = x.PostId,
+                    BloggerName = x.Blogger.Name,
+                    Title = x.Title,
+                    Content = x.Content,
+                    LastUpdated = x.LastUpdated.ToShortDateString(),
+                    TagNames = string.Join(", ", x.Tags.Select(t => t.Name)),
+                    CanMakeLike = !x.Like.Contains(user),
+                    LikeCount = x.Like.Count
+                });
+
+            var listToReturn = new TablePartitioningResponseViewModels
+            {
+                draw = id == null || id < 1 ? 1 : (int)id,
+                recordsTotal = recordsTotal,
+                aaData = listPost,
+                content = content
+            };
+
+            return View(listToReturn);
+        }
+       
 
         public ActionResult About()
         {
@@ -57,6 +106,11 @@ namespace SampleWebApp.Controllers
         public ActionResult CodeView()
         {
             return View();
+        }
+
+        public ActionResult PostDetails(int id, IDetailService service)
+        {
+            return View(service.GetDetail<DetailPostDto>(id).Result);
         }
     }
 }

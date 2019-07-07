@@ -15,5 +15,6 @@ namespace SampleWebApp.Models
         public int recordsTotal { get; set; }
         public int recordsFiltered { get; set; }
         public IEnumerable<object> aaData { get; set; }
+        public string content { get; set; }
     }
 }

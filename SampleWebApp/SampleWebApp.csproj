@@ -247,6 +247,7 @@
     <Compile Include="Infrastructure\Log4NetGenericLogger.cs" />
     <Compile Include="Infrastructure\ValidationHelper.cs" />
     <Compile Include="Infrastructure\WebUiInitialise.cs" />
+    <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\TablePartitioningResponseViewModels.cs" />
     <Compile Include="Models\TopWordsViewModels.cs" />
     <Compile Include="Models\PostLikeViewModels.cs" />
@@ -374,6 +375,9 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\img\bootstrap-mdo-sfmoma-01.jpg" />
+    <Content Include="Content\img\bootstrap-mdo-sfmoma-02.jpg" />
+    <Content Include="Content\img\bootstrap-mdo-sfmoma-03.jpg" />
     <Content Include="Content\img\setup-progress.gif" />
     <Content Include="Content\img\task-progress.gif" />
     <Content Include="Content\notify.css" />
@@ -619,6 +623,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Posts\TopWords.cshtml" />
     <Content Include="Views\Posts\TagCloud.cshtml" />
+    <Content Include="Views\Home\PostDetails.cshtml" />
     <None Include="Web.AzureRelease.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
