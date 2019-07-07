@@ -74,11 +74,28 @@ namespace SampleWebApp.Controllers
                     LikeCount = x.Like.Count
                 });
 
+            //Sort and list to show last most liked Post
+            query = query.OrderByDescending(x => x.LastUpdated.Year).ThenByDescending(x => x.Like.Count).Skip(0).Take(4);
+            var listPostMostLike = query
+               .ToList()
+               .Select(x => new PostViewModel
+               {
+                   PostId = x.PostId,
+                   BloggerName = x.Blogger.Name,
+                   Title = x.Title,
+                   Content = x.Content,
+                   LastUpdated = x.LastUpdated.ToShortDateString(),
+                   TagNames = string.Join(", ", x.Tags.Select(t => t.Name)),
+                   CanMakeLike = !x.Like.Contains(user),
+                   LikeCount = x.Like.Count
+               });
+
             var listToReturn = new TablePartitioningResponseViewModels
             {
                 draw = id == null || id < 1 ? 1 : (int)id,
                 recordsTotal = recordsTotal,
                 aaData = listPost,
+                aaData1 = listPostMostLike,
                 content = content
             };
 

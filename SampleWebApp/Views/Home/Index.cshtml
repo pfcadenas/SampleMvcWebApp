@@ -6,109 +6,134 @@
 
 <br>
 
-<!-- Carousel for public in future main post -->
+<!-- Carousel to show last most liked Post -->
 <div id="myCarousel" class="carousel" style="height:200px">
     <!-- Carousel items -->
     <div class="carousel-inner">
-        <div class="active item"><img src="~/Content/img/bootstrap-mdo-sfmoma-01.jpg" style="height:200px;width:100%" alt=""></div>
-        <div class="item"><img src="~/Content/img/bootstrap-mdo-sfmoma-02.jpg" style="height:200px;width:100%" alt=""></div>
-        <div class="item"><img src="~/Content/img/bootstrap-mdo-sfmoma-03.jpg" style="height:200px;width:100%" alt=""></div>
+        <div class="active item">
+            <img src="~/Content/img/bootstrap-mdo-sfmoma-01.jpg" style="height:200px;width:100%" alt="">
+            <div class="carousel-caption" style="width:100%;background: rgba(0, 0, 0, 0.75);left:0;padding-bottom:0;bottom:0;padding-top:0;">
+                <h4>Welcome to the Sample MVC Web Application - basic version</h4>                
+                <h6>By <span class="text-primary">Pedro Frank Cadenas</span> on <span class="text-primary">@DateTime.Now.ToShortDateString()</span></h6>
+            </div>
+        </div>
+        @foreach (SampleWebApp.Models.PostViewModel item in Model.aaData1)
+        {
+            <div class="item">
+                <img src="~/Content/img/bootstrap-mdo-sfmoma-01.jpg" style="height:200px;width:100%" alt="">
+                <div class="carousel-caption" style="width:100%;background: rgba(0, 0, 0, 0.75);left:0;padding-bottom:0;bottom:0;padding-top:0;">
+                    <h4><a href="/Home/PostDetails/@item.PostId">@item.Title</a></h4>
+                    <p>@item.TagNames</p>
+                    <h6>By <span class="text-primary">@item.BloggerName</span> on <span class="text-primary">@item.LastUpdated</span></h6>
+                </div>
+            </div>
+        }
     </div>
     <!-- Carousel nav -->
     <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
     <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
 </div>
 
-<!-- Show Posts -->
-@foreach (SampleWebApp.Models.PostViewModel item in Model.aaData)
+@if (Model.aaData.Count() == 0)
 {
-    <div>
-        <h3 class="text-info"><a href="/Home/PostDetails/@item.PostId">@item.Title</a></h3>
-        <h4 class="text-muted">
-            @item.TagNames
-        </h4>
-        <h6>By <span class="text-primary">@item.BloggerName</span> on <span class="text-primary">@item.LastUpdated</span></h6>
-        <p style="text-align:justify">
-            @if (item.Content.Length > 1000)
+    <h3 style="margin-left:30%">Sorry! Not found posts about: "@Model.content"</h3>
+}
+else {
+    <!-- Show Posts -->
+    foreach (SampleWebApp.Models.PostViewModel item in Model.aaData)
+    {
+        <div>
+            <h3 class="text-info"><a href="/Home/PostDetails/@item.PostId">@item.Title</a></h3>
+            <h4 class="text-muted">
+                @item.TagNames
+            </h4>
+            <h6>By <span class="text-primary">@item.BloggerName</span> on <span class="text-primary">@item.LastUpdated</span></h6>
+            <p style="text-align:justify">
+                @if (item.Content.Length > 1000)
+                {
+                    @item.Content.Substring(0, 1000);
+                }
+                else
+                {
+                    @item.Content;
+                }
+                ...
+            </p>
+
+            <h5 id="userLike-@item.PostId">
+                Likes &nbsp; <label class="badge badge-success"> @item.LikeCount</label> &nbsp;
+                @if (Request.IsAuthenticated && item.CanMakeLike)
+                { <i data-post-id="@item.PostId" onclick="MakeLike(@item.PostId,@item.LikeCount)" id="userLike" class="glyphicon glyphicon-thumbs-up" style="color:#48b719;cursor:pointer;font-size:medium"></i> }
+            </h5>
+        </div>
+    }
+
+    <br>
+
+    <!-- Partitioning in group of 10 all Posts -->
+    <div class="btn-toolbar" style="margin-left:30%">
+        <div class="btn-group">
+            <a href="/Home/Index/1?content=@Model.content" class="btn btn-default">First</a>
+        </div>
+        <div class="btn-group">
+            @if (Model.draw < 5)
             {
-                @item.Content.Substring(0, 1000);
+                <a class="btn btn-default" href="/Home/Index/1?content=@Model.content">1</a>
+                if (Model.recordsTotal > 10)
+                {<a class="btn btn-default" href="/Home/Index/2?content=@Model.content">2</a>}
+                if (Model.recordsTotal > 20)
+                {<a class="btn btn-default" href="/Home/Index/3?content=@Model.content">3</a>}
+                if (Model.recordsTotal > 30)
+                {<a class="btn btn-default" href="/Home/Index/4?content=@Model.content">4</a>}
+                if (Model.recordsTotal > 40)
+                {<a class="btn btn-default" href="/Home/Index/5?content=@Model.content">5</a>}
+            }
+            else if (Model.draw * 10 >= Model.recordsTotal - 30)
+            {
+                <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 4 : Model.recordsTotal / 10 + 1 - 4 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 4 : Model.recordsTotal / 10 + 1 - 4 )</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 3 : Model.recordsTotal / 10 + 1 - 3 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 3 : Model.recordsTotal / 10 + 1 - 3 )</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 2 : Model.recordsTotal / 10 + 1 - 2 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 2 : Model.recordsTotal / 10 + 1 - 2 )</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 1 : Model.recordsTotal / 10 + 1 - 1 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 1 : Model.recordsTotal / 10 + 1 - 1 )</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 0 : Model.recordsTotal / 10 + 1 - 0 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 0 : Model.recordsTotal / 10 + 1 - 0 )</a>
             }
             else
             {
-                @item.Content;
+                <a class="btn btn-default" href="/Home/Index/@(Model.draw - 2)?content=@Model.content">@(Model.draw - 2)</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.draw - 1)?content=@Model.content">@(Model.draw - 1)</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.draw)?content=@Model.content">@(Model.draw)</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.draw + 1)?content=@Model.content">@(Model.draw + 1)</a>
+                <a class="btn btn-default" href="/Home/Index/@(Model.draw + 2)?content=@Model.content">@(Model.draw + 2)</a>
             }
-            ...
-        </p>
-        
-        <h5 id="userLike-@item.PostId">
-            Likes &nbsp; <label class="badge badge-success"> @item.LikeCount</label> &nbsp;
-            @if (Request.IsAuthenticated && item.CanMakeLike)
-                { <i data-post-id="@item.PostId" onclick="MakeLike(@item.PostId,@item.LikeCount)" id="userLike" class="glyphicon glyphicon-thumbs-up" style="color:#48b719;cursor:pointer;font-size:medium"></i> }
-        </h5>
+
+        </div>
+        <div class="btn-group">
+            <a href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 : Model.recordsTotal / 10 + 1 )?content=@Model.content" class="btn btn-default">Last</a>
+        </div>
     </div>
 }
-
-<br>
-
-<!-- Partitioning in group of 10 all Posts -->
-<div class="btn-toolbar" style="margin-left:30%">
-    <div class="btn-group">
-        <a href="/Home/Index/1?content=@Model.content" class="btn btn-default">First</a>
-    </div>
-    <div class="btn-group">
-        @if (Model.draw < 5)
-        {
-            <a class="btn btn-default" href="/Home/Index/1?content=@Model.content">1</a>
-            if (Model.recordsTotal > 10) {<a class="btn btn-default" href="/Home/Index/2?content=@Model.content">2</a>}
-            if (Model.recordsTotal > 20) {<a class="btn btn-default" href="/Home/Index/3?content=@Model.content">3</a>}
-            if (Model.recordsTotal > 30) {<a class="btn btn-default" href="/Home/Index/4?content=@Model.content">4</a>}
-            if (Model.recordsTotal > 40) {<a class="btn btn-default" href="/Home/Index/5?content=@Model.content">5</a>}
-        }
-        else if (Model.draw * 10 >= Model.recordsTotal - 30)
-        {
-            <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 4 : Model.recordsTotal / 10 + 1 - 4 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 4 : Model.recordsTotal / 10 + 1 - 4 )</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 3 : Model.recordsTotal / 10 + 1 - 3 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 3 : Model.recordsTotal / 10 + 1 - 3 )</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 2 : Model.recordsTotal / 10 + 1 - 2 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 2 : Model.recordsTotal / 10 + 1 - 2 )</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 1 : Model.recordsTotal / 10 + 1 - 1 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 1 : Model.recordsTotal / 10 + 1 - 1 )</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 0 : Model.recordsTotal / 10 + 1 - 0 )?content=@Model.content">@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal / 10 - 0 : Model.recordsTotal / 10 + 1 - 0 )</a>
-        }
-        else
-        {
-            <a class="btn btn-default" href="/Home/Index/@(Model.draw-2)?content=@Model.content">@(Model.draw-2)</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.draw-1)?content=@Model.content">@(Model.draw-1)</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.draw)?content=@Model.content">@(Model.draw)</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.draw+1)?content=@Model.content">@(Model.draw+1)</a>
-            <a class="btn btn-default" href="/Home/Index/@(Model.draw+2)?content=@Model.content">@(Model.draw+2)</a>
-        }
-
-    </div>
-    <div class="btn-group">
-        <a href="/Home/Index/@(Model.recordsTotal % 10 == 0 ? Model.recordsTotal/10 : Model.recordsTotal/10+1 )?content=@Model.content" class="btn btn-default">Last</a>
-    </div>
-</div>
 
 @section scripts
 {
     <script>
 
-           //Carousel for public in future main post
-            $('.carousel').carousel({
-                interval: 2000
-            });
+        //Carousel to show last most liked Post
+        $('.carousel').carousel({
+            interval: 2000
+        });
 
-            //function to make like to a post
-            function MakeLike(PostID,CountLike) {
-                $.ajax({
-                    url: "/api/post/like/",
-                    method: "POST",
-                    data: {
-                        PostID: PostID
-                    },
-                    success: function (response) {
-                        $("#userLike-" + PostID).html("Likes &nbsp; <label class='badge badge-success'> " + (parseInt(CountLike)+1) + "</label> &nbsp;");
-                    }
-                });
-            }
+        //function to make like to a post
+        function MakeLike(PostID, CountLike) {
+            $.ajax({
+                url: "/api/post/like/",
+                method: "POST",
+                data: {
+                    PostID: PostID
+                },
+                success: function (response) {
+                    $("#userLike-" + PostID).html("Likes &nbsp; <label class='badge badge-success'> " + (parseInt(CountLike) + 1) + "</label> &nbsp;");
+                }
+            });
+        }
 
     </script>
 }
