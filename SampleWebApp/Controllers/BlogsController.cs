@@ -24,12 +24,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using System.Linq;
 using System.Web.Mvc;
 using DataLayer.DataClasses.Concrete;
 using GenericServices;
 using SampleWebApp.Infrastructure;
-using ServiceLayer.BlogServices;
 
 namespace SampleWebApp.Controllers
 {
@@ -44,7 +42,7 @@ namespace SampleWebApp.Controllers
        
         public ActionResult Index(IListService service)
         {
-            return View(service.GetAll<BlogListDto>().ToList());
+            return View();
         }
 
         public ActionResult Edit(int id, IUpdateSetupService service)

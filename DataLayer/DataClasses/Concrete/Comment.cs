@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: Blog.cs
-// Date Created: 2014/05/20
+// Filename: Comment.cs
+// Date Created: 2019/07/07
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 

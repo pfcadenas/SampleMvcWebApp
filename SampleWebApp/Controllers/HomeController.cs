@@ -31,8 +31,8 @@ using DataLayer.DataClasses.Concrete;
 using System.Linq;
 using GenericServices;
 using ServiceLayer.PostServices;
-using ServiceLayer.CommentServices;
 using SampleWebApp.Infrastructure;
+using System.Data.Entity;
 
 namespace SampleWebApp.Controllers
 {
@@ -77,12 +77,15 @@ namespace SampleWebApp.Controllers
                     CommentCount = x.Comment.Count
                 });
 
-            //Sort and list to show last most liked Post
-            query = query.OrderByDescending(x => x.LastUpdated.Year).ThenByDescending(x => x.Like.Count).Skip(0).Take(4);
-            var listPostMostLike = query
-               .ToList()
-               .Select(x => new PostViewModel
-               {
+            //list to show lasts most liked Post
+            var listPostMostLike = db.Posts.Include("Like").Include("Blogger").Include("Tags").Include("Comment")
+                .OrderByDescending(x => x.LastUpdated.Year)
+                .ThenByDescending(x => x.LastUpdated.Month)
+                .ThenByDescending(x => x.LastUpdated.Day)
+                .ThenByDescending(x => x.Like.Count).Skip(0).Take(3)
+                .ToList()
+                .Select(x => new PostViewModel
+                {
                    PostId = x.PostId,
                    BloggerName = x.Blogger.Name,
                    Title = x.Title,
@@ -91,7 +94,7 @@ namespace SampleWebApp.Controllers
                    TagNames = string.Join(", ", x.Tags.Select(t => t.Name)),
                    CanMakeLike = !x.Like.Contains(user),
                    LikeCount = x.Like.Count
-               });
+                });
 
             var listToReturn = new TablePartitioningResponseViewModels
             {

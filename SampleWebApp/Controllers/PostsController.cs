@@ -179,11 +179,13 @@ namespace SampleWebApp.Controllers
         [AllowAnonymous]
         public ActionResult TopWords(SampleWebAppDb db)
         {
-            string query = "";
-            IEnumerable<Post> posts = db.Posts.ToList();
-            
-            //Build the query to obtain the 5 words most used on all post 
-            query = @"SELECT 
+            try
+            {
+                string query = "";
+                IEnumerable<Post> posts = db.Posts.ToList();
+
+                //Build the query to obtain the 5 words most used on all post 
+                query = @"SELECT 
 
                         u.word,
                         sum(u.weigth ) AS weigth
@@ -191,13 +193,13 @@ namespace SampleWebApp.Controllers
                         FROM 
                         (";
 
-            string queryFrom = "";
-            foreach (var post in posts)
-            {
-                queryFrom += " UNION SELECT * FROM dbo.FindWordByPost(" + post.PostId +")";
-            }
+                string queryFrom = "";
+                foreach (var post in posts)
+                {
+                    queryFrom += " UNION SELECT * FROM dbo.FindWordByPost(" + post.PostId + ")";
+                }
 
-            query += queryFrom.Substring(6) + @" )
+                query += queryFrom.Substring(6) + @" )
 
                         as u
 
@@ -205,19 +207,25 @@ namespace SampleWebApp.Controllers
                         ORDER BY sum(u.weigth) DESC";
 
 
-            var result = db.Database.SqlQuery<TopWordsViewModels>(query).Take(5).ToList();
+                var result = db.Database.SqlQuery<TopWordsViewModels>(query).Take(5).ToList();
 
-            return View(result);
+                return View(result);
+            }
+            catch {
+                return View(new List<TopWordsViewModels>());
+            }
         }
 
         [AllowAnonymous]
         public ActionResult TagCloud(SampleWebAppDb db)
         {
-            string query = "";
-            IEnumerable<Post> posts = db.Posts.ToList();
+            try
+            {
+                string query = "";
+                IEnumerable<Post> posts = db.Posts.ToList();
 
-            //Build the query to obtain the 20 words most used on all post to create a tag cloud 
-            query = @"SELECT 
+                //Build the query to obtain the 20 words most used on all post to create a tag cloud 
+                query = @"SELECT 
 
                         u.word,
                         sum(u.weigth ) AS weigth
@@ -225,13 +233,13 @@ namespace SampleWebApp.Controllers
                         FROM 
                         (";
 
-            string queryFrom = "";
-            foreach (var post in posts)
-            {
-                queryFrom += " UNION SELECT * FROM dbo.FindWordByPost(" + post.PostId + ")";
-            }
+                string queryFrom = "";
+                foreach (var post in posts)
+                {
+                    queryFrom += " UNION SELECT * FROM dbo.FindWordByPost(" + post.PostId + ")";
+                }
 
-            query += queryFrom.Substring(6) + @" )
+                query += queryFrom.Substring(6) + @" )
 
                         as u
 
@@ -239,9 +247,14 @@ namespace SampleWebApp.Controllers
                         ORDER BY sum(u.weigth) DESC";
 
 
-            var result = db.Database.SqlQuery<TopWordsViewModels>(query).Take(20).ToList();
+                var result = db.Database.SqlQuery<TopWordsViewModels>(query).Take(20).ToList();
 
-            return View(result);
+                return View(result);
+            }
+            catch
+            {
+                return View(new List<TopWordsViewModels>());
+            }
         }
     }
 }
