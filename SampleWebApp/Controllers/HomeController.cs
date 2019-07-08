@@ -31,6 +31,8 @@ using DataLayer.DataClasses.Concrete;
 using System.Linq;
 using GenericServices;
 using ServiceLayer.PostServices;
+using ServiceLayer.CommentServices;
+using SampleWebApp.Infrastructure;
 
 namespace SampleWebApp.Controllers
 {
@@ -45,7 +47,7 @@ namespace SampleWebApp.Controllers
 
         public ActionResult Index(int? id, [System.Web.Http.FromUri] string content)
         {
-            IQueryable<Post> query = db.Posts.Include("Like").Include("Blogger").Include("Tags");
+            IQueryable<Post> query = db.Posts.Include("Like").Include("Blogger").Include("Tags").Include("Comment");
 
             //filter by Content 
             if (content != null && content != "")
@@ -71,7 +73,8 @@ namespace SampleWebApp.Controllers
                     LastUpdated = x.LastUpdated.ToShortDateString(),
                     TagNames = string.Join(", ", x.Tags.Select(t => t.Name)),
                     CanMakeLike = !x.Like.Contains(user),
-                    LikeCount = x.Like.Count
+                    LikeCount = x.Like.Count,
+                    CommentCount = x.Comment.Count
                 });
 
             //Sort and list to show last most liked Post
@@ -127,7 +130,39 @@ namespace SampleWebApp.Controllers
 
         public ActionResult PostDetails(int id, IDetailService service)
         {
-            return View(service.GetDetail<DetailPostDto>(id).Result);
+            return View(new DetailPostViewModels
+            {
+                Comment = new Comment(),
+                DetailPostDto = service.GetDetail<DetailPostDto>(id).Result
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PostDetails(Comment comment, ICreateService service, IDetailService serviceDetail)
+        {
+            if (!ModelState.IsValid)
+                //model errors so return immediately
+                return View(new DetailPostViewModels
+                {
+                    Comment = comment,
+                    DetailPostDto = serviceDetail.GetDetail<DetailPostDto>(comment.PostId).Result
+                });
+
+            var response = service.Create(comment);
+            if (response.IsValid)
+            {
+                TempData["message"] = response.SuccessMessage;
+                return RedirectToAction("PostDetails");
+            }
+
+            //else errors, so copy the errors over to the ModelState and return to view
+            response.CopyErrorsToModelState(ModelState, comment);
+            return View(new DetailPostViewModels
+            {
+                Comment = comment,
+                DetailPostDto = serviceDetail.GetDetail<DetailPostDto>(comment.PostId).Result
+            });
         }
     }
 }

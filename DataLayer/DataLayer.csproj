@@ -111,6 +111,7 @@
   <ItemGroup>
     <Compile Include="DataClasses\ApplicationDbContext.cs" />
     <Compile Include="DataClasses\Concrete\ApplicationUser.cs" />
+    <Compile Include="DataClasses\Concrete\Comment.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -127,6 +128,10 @@
     <Compile Include="Migrations\201906260555403_InitialCreate2.cs" />
     <Compile Include="Migrations\201906260555403_InitialCreate2.Designer.cs">
       <DependentUpon>201906260555403_InitialCreate2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201907072351487_InitialCreate3.cs" />
+    <Compile Include="Migrations\201907072351487_InitialCreate3.Designer.cs">
+      <DependentUpon>201907072351487_InitialCreate3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Startup\DataLayerInitialise.cs" />
@@ -148,6 +153,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906260555403_InitialCreate2.resx">
       <DependentUpon>201906260555403_InitialCreate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907072351487_InitialCreate3.resx">
+      <DependentUpon>201907072351487_InitialCreate3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Startup\Internal\BlogsContentSimple.xml" />
   </ItemGroup>

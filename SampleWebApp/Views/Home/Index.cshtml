@@ -64,6 +64,9 @@ else {
                 Likes &nbsp; <label class="badge badge-success"> @item.LikeCount</label> &nbsp;
                 @if (Request.IsAuthenticated && item.CanMakeLike)
                 { <i data-post-id="@item.PostId" onclick="MakeLike(@item.PostId,@item.LikeCount)" id="userLike" class="glyphicon glyphicon-thumbs-up" style="color:#48b719;cursor:pointer;font-size:medium"></i> }
+
+                &nbsp;&nbsp;&nbsp;
+                Comments &nbsp; <label class="badge badge-success"> @item.CommentCount</label> &nbsp;
             </h5>
         </div>
     }

@@ -247,6 +247,7 @@
     <Compile Include="Infrastructure\Log4NetGenericLogger.cs" />
     <Compile Include="Infrastructure\ValidationHelper.cs" />
     <Compile Include="Infrastructure\WebUiInitialise.cs" />
+    <Compile Include="Models\DetailPostViewModels.cs" />
     <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\TablePartitioningResponseViewModels.cs" />
     <Compile Include="Models\TopWordsViewModels.cs" />

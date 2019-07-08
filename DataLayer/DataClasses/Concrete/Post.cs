@@ -50,6 +50,8 @@ namespace DataLayer.DataClasses.Concrete
 
         public ICollection<ApplicationUser> Like { get; set; }
 
+        public ICollection<Comment> Comment { get; set; }
+
         public Post() {
             Like = new HashSet<ApplicationUser>();
         }

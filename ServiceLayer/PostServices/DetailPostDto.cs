@@ -75,6 +75,8 @@ namespace ServiceLayer.PostServices
         [ScaffoldColumn(false)]
         public ICollection<Tag> Tags { get; set; }
 
+        public ICollection<Comment> Comment { get; set; }
+
         //-------------------------------------------
         //now the various lists for user interaction
 

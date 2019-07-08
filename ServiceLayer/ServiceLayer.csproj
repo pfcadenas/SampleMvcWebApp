@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlogServices\BlogListDto.cs" />
+    <Compile Include="CommentServices\CommentListDto.cs" />
     <Compile Include="PostServices\DetailPostDtoAsync.cs" />
     <Compile Include="PostServices\DetailPostDto.cs" />
     <Compile Include="PostServices\SimplePostDtoAsync.cs" />

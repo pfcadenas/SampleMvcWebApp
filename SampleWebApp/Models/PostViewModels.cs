@@ -13,5 +13,6 @@ namespace SampleWebApp.Models
         public string TagNames { get; set; }
         public bool CanMakeLike { get; set; }
         public int LikeCount { get; set; }
+        public int CommentCount { get; set; }        
     }
 }
