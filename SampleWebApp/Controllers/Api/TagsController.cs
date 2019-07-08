@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using DataLayer.DataClasses;
@@ -39,8 +41,24 @@ namespace SampleWebApp.Controllers.Api
 
         public TagsController() {
             db = new SampleWebAppDb();
-        }     
-      
+        }
+
+        //GET /api/tags
+        public IHttpActionResult GetTags(string query = null)
+        {
+            var tagsDtos = new List<Tag>();
+
+            if (!String.IsNullOrWhiteSpace(query))
+                tagsDtos = db.Tags
+                   .Where(c => c.Name.Contains(query))
+                   .ToList();
+            else
+                tagsDtos = db.Tags
+                    .ToList();
+
+            return Ok(tagsDtos);
+        }
+
         public IHttpActionResult GetTags([FromUri] int? draw, [FromUri] int? start, [FromUri] int? length)
         {
             IQueryable<Tag> query = db.Tags.Include("Posts");           

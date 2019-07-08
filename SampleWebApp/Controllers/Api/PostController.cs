@@ -57,10 +57,14 @@ namespace SampleWebApp.Controllers.Api
         }
 
 
-        public IHttpActionResult GetPosts([FromUri] int? draw, [FromUri] int? start, [FromUri] int? length, [FromUri] string content, [FromUri] int? blog)
+        public IHttpActionResult GetPosts([FromUri] int? draw, [FromUri] int? start, [FromUri] int? length, [FromUri] string content, [FromUri] int? tag, [FromUri] int? blog)
         {
-            IQueryable<Post> query = db.Posts.Include("Like").Include("Blogger").Include("Tags");            
-            
+            IQueryable<Post> query = db.Posts.Include("Like").Include("Blogger").Include("Tags");
+
+            //filter by tag
+            if (tag != null && tag != 0)
+                query = query.Where(x => x.Tags.Select(t => t.TagId).Contains((int)tag));
+
             //filter by Content 
             if (content != null && content != "")
                 query = query.Where(x => x.Content.Contains(content));           

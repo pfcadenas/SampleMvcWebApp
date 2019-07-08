@@ -48,15 +48,25 @@
         </div>
         <div class="form-group">
             <div class="col-md-12">
+                <label class="control-label">Tag</label>
+                <select id="tagsSelect" name="tag" type="text" value="" class="form-control">
+                    <option value="0">--Seleccione--</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
                 <label class="control-label">Blog</label>
                 <select id="blogsSelect" name="blog" type="text" value="" class="form-control">
                     <option value="0">--Seleccione--</option>
                 </select>
             </div>
         </div>
-        <button id="btnSearch" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-search"></i> Buscar</button>
+        <button id="btnSearch" class="btn btn-sm btn-primary "><i class="glyphicon glyphicon-search"></i> Search</button>
     </div>
 </div>
+
+
 
 <table id="tablePosts" class="table">
     <thead>
@@ -97,13 +107,14 @@
                 "bFilter": false,
                 "bProcessing": true,
                 "bServerSide": true,
-                "deferLoading": 0, 
+                "deferLoading": 0,
                 "ajax": {
                     url: "/api/post",
                     method: 'GET',
                     dataSrc: "aaData",
                     data: {
                         content: function () { return $('#content').val() },
+                        tag: function () { return $('#tagsSelect').val() },
                         blog: function () { return $('#blogsSelect').val() }
                     }
                 },
@@ -164,6 +175,23 @@
                 $("#tablePosts").DataTable().ajax.reload();
             });
 
+            $("#content, #tagsSelect, #blogsSelect").on("keypress", function (key) {
+                if (key.keyCode == 13) {
+                    $("#tablePosts").DataTable().ajax.reload();
+                }
+            });
+
+            //function for load filter Tag
+            $.ajax({
+                url: '/api/tags',
+                method: 'GET',
+                success: function (tags) {
+                    for (var i = 0; i < tags.length; i++) {
+                        $('#tagsSelect').append('<option value="' + tags[i].TagId + '">' + tags[i].Name + '</option>');
+                    };
+                }
+            });
+
             //function for load filter Blog
             $.ajax({
                 url: '/api/blogs',
@@ -173,9 +201,10 @@
                         $('#blogsSelect').append('<option value="' + blogs[i].BlogId + '">' + blogs[i].Name + '</option>');
                     };
                     $('#blogsSelect').val(@ViewData["blog"]);
-                    $("#tablePosts").DataTable().ajax.reload(); //load datatable data after load all Blog filters 
+                    $("#tablePosts").DataTable().ajax.reload(); //load datatable data after load all Blog filters
                 }
             });
+            
 
         });
 
